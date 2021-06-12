@@ -68,7 +68,7 @@ func NewChain(order int) *Chain {
 		stringMap: make(map[string]int),
 		intMap:    make(map[int]string),
 	}
-	chain.frequencyMat = make(map[int]sparseArray, 0)
+	chain.frequencyMat = make(map[int]sparseArray)
 	chain.lock = new(sync.RWMutex)
 	return &chain
 }
@@ -88,7 +88,7 @@ func (chain *Chain) Add(input []string) {
 		nextIndex := chain.statePool.add(pair.NextState)
 		chain.lock.Lock()
 		if chain.frequencyMat[currentIndex] == nil {
-			chain.frequencyMat[currentIndex] = make(sparseArray, 0)
+			chain.frequencyMat[currentIndex] = make(sparseArray)
 		}
 		chain.frequencyMat[currentIndex][nextIndex]++
 		chain.lock.Unlock()
@@ -98,7 +98,7 @@ func (chain *Chain) Add(input []string) {
 //TransitionProbability returns the transition probability between two states
 func (chain *Chain) TransitionProbability(next string, current NGram) (float64, error) {
 	if len(current) != chain.Order {
-		return 0, errors.New("N-gram length does not match chain order")
+		return 0, errors.New("n-gram length does not match chain order")
 	}
 	currentIndex, currentExists := chain.statePool.get(current.key())
 	nextIndex, nextExists := chain.statePool.get(next)
@@ -114,7 +114,7 @@ func (chain *Chain) TransitionProbability(next string, current NGram) (float64, 
 //Generate generates new text based on an initial seed of words
 func (chain *Chain) Generate(current NGram) (string, error) {
 	if len(current) != chain.Order {
-		return "", errors.New("N-gram length does not match chain order")
+		return "", errors.New("n-gram length does not match chain order")
 	}
 	if current[len(current)-1] == EndToken {
 		// Dont generate anything after the end token
@@ -122,7 +122,7 @@ func (chain *Chain) Generate(current NGram) (string, error) {
 	}
 	currentIndex, currentExists := chain.statePool.get(current.key())
 	if !currentExists {
-		return "", fmt.Errorf("Unknown ngram %v", current)
+		return "", fmt.Errorf("unknown ngram %v", current)
 	}
 	arr := chain.frequencyMat[currentIndex]
 	sum := arr.sum()
