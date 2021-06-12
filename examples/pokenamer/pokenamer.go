@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mb-14/gomarkov"
+	"github.com/feldhofer/gomarkov"
 )
 
 func main() {
