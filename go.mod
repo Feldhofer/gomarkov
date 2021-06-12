@@ -1,5 +1,5 @@
 module github.com/feldhofer/gomarkov
 
-go 1.14
+go 1.16
 
-require github.com/montanaflynn/stats v0.6.3
+require github.com/montanaflynn/stats v0.6.6
