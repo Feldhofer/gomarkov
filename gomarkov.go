@@ -16,7 +16,7 @@ const (
 	EndToken   = "^"
 )
 
-var lrnd *rand.Rand
+var lrnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 //Chain is a markov chain instance
 type Chain struct {
@@ -164,8 +164,4 @@ func (chain *Chain) GenerateSeed(current NGram, rnd *rand.Rand) (string, error) 
 		}
 	}
 	return "", nil
-}
-
-func init() {
-	lrnd.Seed(time.Now().UnixNano())
 }
