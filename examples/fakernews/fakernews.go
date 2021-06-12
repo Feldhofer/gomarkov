@@ -121,7 +121,7 @@ func saveModel(chain *gomarkov.Chain) {
 func generateHNStory(chain *gomarkov.Chain) {
 	tokens := []string{gomarkov.StartToken}
 	for tokens[len(tokens)-1] != gomarkov.EndToken {
-		next, _ := chain.Generate(tokens[(len(tokens) - 1):])
+		next, _ := chain.Generate(tokens[(len(tokens)-1):], nil)
 		tokens = append(tokens, next)
 	}
 	fmt.Println(strings.Join(tokens[1:len(tokens)-1], " "))

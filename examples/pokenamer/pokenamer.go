@@ -79,7 +79,7 @@ func generatePokemon(chain *gomarkov.Chain) {
 		tokens = append(tokens, gomarkov.StartToken)
 	}
 	for tokens[len(tokens)-1] != gomarkov.EndToken {
-		next, _ := chain.Generate(tokens[(len(tokens) - order):])
+		next, _ := chain.Generate(tokens[(len(tokens)-order):], nil)
 		tokens = append(tokens, next)
 	}
 	fmt.Println(strings.Join(tokens[order:len(tokens)-1], ""))
