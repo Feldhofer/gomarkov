@@ -229,7 +229,7 @@ func TestChain_Generate(t *testing.T) {
 			chain := NewChain(1)
 			chain.UnmarshalJSON(tt.chain)
 
-			got, err := chain.Generate(tt.args.current, nil)
+			got, err := chain.Generate(tt.args.current)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Chain.Generate() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -114,7 +114,32 @@ func (chain *Chain) TransitionProbability(next string, current NGram) (float64, 
 }
 
 //Generate generates new text based on an initial seed of words
-func (chain *Chain) Generate(current NGram, rnd *rand.Rand) (string, error) {
+func (chain *Chain) Generate(current NGram) (string, error) {
+	if len(current) != chain.Order {
+		return "", errors.New("n-gram length does not match chain order")
+	}
+	if current[len(current)-1] == EndToken {
+		// Dont generate anything after the end token
+		return "", nil
+	}
+	currentIndex, currentExists := chain.statePool.get(current.key())
+	if !currentExists {
+		return "", fmt.Errorf("unknown ngram %v", current)
+	}
+	arr := chain.frequencyMat[currentIndex]
+	sum := arr.sum()
+	randN := lrnd.Intn(sum)
+	for i, freq := range arr {
+		randN -= freq
+		if randN <= 0 {
+			return chain.statePool.intMap[i], nil
+		}
+	}
+	return "", nil
+}
+
+//Generate generates new text based on an initial seed of words
+func (chain *Chain) GenerateSeed(current NGram, rnd *rand.Rand) (string, error) {
 	if rnd == nil {
 		rnd = lrnd
 	}
