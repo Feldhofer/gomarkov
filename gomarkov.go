@@ -114,7 +114,10 @@ func (chain *Chain) TransitionProbability(next string, current NGram) (float64, 
 }
 
 //Generate generates new text based on an initial seed of words
-func (chain *Chain) Generate(current NGram) (string, error) {
+func (chain *Chain) Generate(current NGram, rnd *rand.Rand) (string, error) {
+	if rnd == nil {
+		rnd = lrnd
+	}
 	if len(current) != chain.Order {
 		return "", errors.New("n-gram length does not match chain order")
 	}
@@ -128,7 +131,7 @@ func (chain *Chain) Generate(current NGram) (string, error) {
 	}
 	arr := chain.frequencyMat[currentIndex]
 	sum := arr.sum()
-	randN := lrnd.Intn(sum)
+	randN := rnd.Intn(sum)
 	for i, freq := range arr {
 		randN -= freq
 		if randN <= 0 {
