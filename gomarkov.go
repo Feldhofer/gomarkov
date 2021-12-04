@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"sort"
 	"sync"
 	"time"
 )
@@ -157,8 +158,13 @@ func (chain *Chain) GenerateSeed(current NGram, rnd *rand.Rand) (string, error) 
 	arr := chain.frequencyMat[currentIndex]
 	sum := arr.sum()
 	randN := rnd.Intn(sum)
-	for i, freq := range arr {
-		randN -= freq
+	keys := make([]int, 0, len(arr))
+	for k := range arr {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+	for _, i := range keys {
+		randN -= arr[i]
 		if randN <= 0 {
 			return chain.statePool.intMap[i], nil
 		}
