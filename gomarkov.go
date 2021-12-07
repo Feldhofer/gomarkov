@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/rand"
 	"sort"
 	"sync"
 	"time"
+
+	"golang.org/x/exp/rand"
 )
 
 //Tokens are wrapped around a sequence of words to maintain the
@@ -17,7 +18,7 @@ const (
 	EndToken   = "^"
 )
 
-var lrnd = rand.New(rand.NewSource(time.Now().UnixNano()))
+var lrnd = rand.New(rand.NewSource(uint64(time.Now().UnixNano())))
 
 //Chain is a markov chain instance
 type Chain struct {
